@@ -1,7 +1,7 @@
 from flask import Flask, request
 from .payload import *
 
-class Client():
+class Client:
     def __init__(self):
         self.server = Flask(__name__)
 
