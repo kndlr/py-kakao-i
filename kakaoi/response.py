@@ -115,3 +115,40 @@ class BasicCard:
         if self.description: self.dict["description"] = self.description
         if self.buttons: self.dict["buttons"] = [button.__dict__() for button in self.buttons]
         return self.dict
+
+class Profile:
+    def __init__(self, *, nickname : str, image_url : str = None):
+        self.nickname = nickname
+        self.image_url = image_url
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<Profile {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"nickname":self.nickname}
+        if self.image_url: self.dict["imageUrl"] = self.image_url
+        return self.dict
+
+class CommerceCard:
+    def __init__(self, *, description : str, price : int, discount : int = None, discount_rate : int = None, discounted_price : int = None, thumbnail : Thumbnail, profile : Profile = None, buttons : list):
+        self.description = description
+        self.price = price
+        self.discount = discount
+        self.discount_rate = discount_rate
+        self.discounted_price = discounted_price
+        self.thumbnail = thumbnail
+        self.profile = profile
+        self.buttons = buttons
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<CommerceCard {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"description":self.description,"price":self.price,"currency":"won","thumbnails":[self.thumbnail.__dict__()],"buttons":[button.__dict__() for button in self.buttons]}
+        if self.discount: self.dict["discount"] = self.discount
+        if self.discount_rate: self.dict["discountRate"] = self.discount_rate
+        if self.discounted_price: self.dict["discountedPrice"] = self.discounted_price
+        if self.profile: self.dict["profile"] = self.profile.__dict__()
+        return self.dict
