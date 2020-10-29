@@ -10,7 +10,8 @@ class SimpleText:
         return f"<SimpleText {resolved}>"
 
     def __dict__(self):
-        return {"simpleText":{"text": self.text}}
+        self.dict = {"simpleText":{"text": self.text}}
+        return self.dict
 
 class SimpleImage:
     def __init__(self, image_url : str, alt_text : str):
@@ -25,7 +26,8 @@ class SimpleImage:
         return f"<SimpleImage {resolved}>"
 
     def __dict__(self):
-        return {"simpleImage":{"imageUrl": self.image_url,"altText": self.alt_text}}
+        self.dict = {"simpleImage":{"imageUrl": self.image_url,"altText": self.alt_text}}
+        return self.dict
 
 class Link:
     def __init__(self, *, pc : str = None, mobile : str = None, web : str = None):
@@ -121,6 +123,9 @@ class Profile:
         self.nickname = nickname
         self.image_url = image_url
 
+    def __str__(self):
+        return self.nickname
+
     def __repr__(self):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<Profile {resolved}>"
@@ -141,6 +146,9 @@ class CommerceCard:
         self.profile = profile
         self.buttons = buttons
 
+    def __str__(self):
+        return self.description
+
     def __repr__(self):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<CommerceCard {resolved}>"
@@ -160,6 +168,9 @@ class ListItem:
         self.image_url = image_url
         self.link = link
 
+    def __str__(self):
+        return self.title
+
     def __repr__(self):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<ListItem {resolved}>"
@@ -177,6 +188,9 @@ class ListHeader:
         self.image_url = image_url
         self.link = link
 
+    def __str__(self):
+        return self.title
+
     def __repr__(self):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<ListHeader {resolved}>"
@@ -193,6 +207,9 @@ class ListCard:
         self.items = items
         self.buttons = buttons
 
+    def __str__(self):
+        return self.header.title
+
     def __repr__(self):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<ListCard {resolved}>"
@@ -200,4 +217,40 @@ class ListCard:
     def __dict__(self):
         self.dict = {"listCard":{"header":self.header.__dict__(),"items":[item.__dict__() for item in self.items]}}
         if self.buttons: self.dict["listCard"]["buttons"] = [button.__dict__() for button in self.buttons]
+        return self.dict
+
+class CarouselHeader:
+    def __init__(self, *, title : str, description : str, thumbnail : Thumbnail):
+        self.title = title
+        self.description = description
+        self.thumbnail = thumbnail
+
+    def __str__(self):
+        return self.title
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<CarouselHeader {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"title":self.title,"description":self.description,"thumbnail":self.thumbnail.__dict__()}
+        return self.dict
+
+class Carousel:
+    def __init__(self, *, items : list, header : CarouselHeader = None):
+        if all([list(item.__dict__().keys())[0] for item in items]):
+            self.type = list(items[0].__dict__().keys())[0]
+        self.items = items
+        self.header = header
+
+    def __str__(self):
+        return self.type
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<CarouselHeader {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"carousel":{"type":self.type,"items":[item.__dict__() for item in self.items]}}
+        if self.header: self.dict["carousel"]["header"] = self.header.__dict__()
         return self.dict
