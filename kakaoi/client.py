@@ -13,6 +13,6 @@ class Client:
         @self.server.route("/", methods=["POST"])
         def message():
             response = func(SkillPayload(request.get_json()))
-            return response.__dict__()
+            return {"version": "2.0","template": {"outputs": [res.__dict__() for res in response] if type(response) == list else [response.__dict__()]}}
         
         self.server.run(host=host, port=port, debug=debug)

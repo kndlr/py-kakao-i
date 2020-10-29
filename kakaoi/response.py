@@ -10,7 +10,7 @@ class SimpleText:
         return f"<SimpleText {resolved}>"
 
     def __dict__(self):
-        return {"version": "2.0","template": {"outputs": [{"simpleText": {"text": self.text}}]}}
+        return {"simpleText":{"text": self.text}}
 
 class SimpleImage:
     def __init__(self, image_url : str, alt_text : str):
@@ -25,7 +25,7 @@ class SimpleImage:
         return f"<SimpleImage {resolved}>"
 
     def __dict__(self):
-        return {"version": "2.0","template": {"outputs": [{"simpleImage": {"imageUrl": self.image_url,"altText": self.alt_text}}]}}
+        return {"simpleImage":{"imageUrl": self.image_url,"altText": self.alt_text}}
 
 class Link:
     def __init__(self, *, pc : str = None, mobile : str = None, web : str = None):
@@ -110,10 +110,10 @@ class BasicCard:
         return f"<BasicCard {resolved}>"
 
     def __dict__(self):
-        self.dict = {"thumbnail":self.thumbnail.__dict__()}
-        if self.title: self.dict["title"] = self.title
-        if self.description: self.dict["description"] = self.description
-        if self.buttons: self.dict["buttons"] = [button.__dict__() for button in self.buttons]
+        self.dict = {"basicCard":{"thumbnail":self.thumbnail.__dict__()}}
+        if self.title: self.dict["basicCard"]["title"] = self.title
+        if self.description: self.dict["basicCard"]["description"] = self.description
+        if self.buttons: self.dict["basicCard"]["buttons"] = [button.__dict__() for button in self.buttons]
         return self.dict
 
 class Profile:
@@ -146,11 +146,11 @@ class CommerceCard:
         return f"<CommerceCard {resolved}>"
 
     def __dict__(self):
-        self.dict = {"description":self.description,"price":self.price,"currency":"won","thumbnails":[self.thumbnail.__dict__()],"buttons":[button.__dict__() for button in self.buttons]}
-        if self.discount: self.dict["discount"] = self.discount
-        if self.discount_rate: self.dict["discountRate"] = self.discount_rate
-        if self.discounted_price: self.dict["discountedPrice"] = self.discounted_price
-        if self.profile: self.dict["profile"] = self.profile.__dict__()
+        self.dict = {"commerceCard":{"description":self.description,"price":self.price,"currency":"won","thumbnails":[self.thumbnail.__dict__()],"buttons":[button.__dict__() for button in self.buttons]}}
+        if self.discount: self.dict["commerceCard"]["discount"] = self.discount
+        if self.discount_rate: self.dict["commerceCard"]["discountRate"] = self.discount_rate
+        if self.discounted_price: self.dict["commerceCard"]["discountedPrice"] = self.discounted_price
+        if self.profile: self.dict["commerceCard"]["profile"] = self.profile.__dict__()
         return self.dict
 
 class ListItem:
@@ -198,6 +198,6 @@ class ListCard:
         return f"<ListCard {resolved}>"
 
     def __dict__(self):
-        self.dict = {"header":self.header.__dict__(),"items":[item.__dict__() for item in self.items]}
-        if self.buttons: self.dict["buttons"] = [button.__dict__() for button in self.buttons]
+        self.dict = {"listCard":{"header":self.header.__dict__(),"items":[item.__dict__() for item in self.items]}}
+        if self.buttons: self.dict["listCard"]["buttons"] = [button.__dict__() for button in self.buttons]
         return self.dict
