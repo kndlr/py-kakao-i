@@ -152,3 +152,52 @@ class CommerceCard:
         if self.discounted_price: self.dict["discountedPrice"] = self.discounted_price
         if self.profile: self.dict["profile"] = self.profile.__dict__()
         return self.dict
+
+class ListItem:
+    def __init__(self, *, title : str, description : str = None, image_url : str = None, link : Link = None):
+        self.title = title
+        self.description = description
+        self.image_url = image_url
+        self.link = link
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<ListItem {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"title":self.title}
+        if self.description: self.dict["description"] = self.description
+        if self.image_url: self.dict["imageUrl"] = self.image_url
+        if self.link: self.dict["link"] = self.link.__dict__()
+        return self.dict
+
+class ListHeader:
+    def __init__(self, *, title : str, image_url : str = None, link : Link = None):
+        self.title = title
+        self.image_url = image_url
+        self.link = link
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<ListHeader {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"title":self.title}
+        if self.image_url: self.dict["imageUrl"] = self.image_url
+        if self.link: self.dict["link"] = self.link.__dict__()
+        return self.dict
+
+class ListCard:
+    def __init__(self, *, header : ListHeader, items : list, buttons : list = None):
+        self.header = header
+        self.items = items
+        self.buttons = buttons
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<ListCard {resolved}>"
+
+    def __dict__(self):
+        self.dict = {"header":self.header.__dict__(),"items":[item.__dict__() for item in self.items]}
+        if self.buttons: self.dict["buttons"] = [button.__dict__() for button in self.buttons]
+        return self.dict
