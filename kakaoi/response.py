@@ -1,6 +1,9 @@
-class SimpleText:
-    def __init__(self, text : str):
+from .model import *
+
+class SimpleText(Forwardable):
+    def __init__(self, text : str, **kwargs):
         self.text = text
+        super().__init__(**kwargs)
 
     def __str__(self):
         return self.text
@@ -11,12 +14,14 @@ class SimpleText:
 
     def __dict__(self):
         self.dict = {"simpleText":{"text": self.text}}
+        super().__dict__()
         return self.dict
 
-class SimpleImage:
-    def __init__(self, image_url : str, alt_text : str):
+class SimpleImage(Forwardable):
+    def __init__(self, image_url : str, alt_text : str, **kwargs):
         self.image_url = image_url
         self.alt_text = alt_text
+        super().__init__(**kwargs)
 
     def __str__(self):
         return self.image_url
@@ -27,82 +32,16 @@ class SimpleImage:
 
     def __dict__(self):
         self.dict = {"simpleImage":{"imageUrl": self.image_url,"altText": self.alt_text}}
+        super().__dict__()
         return self.dict
 
-class Link:
-    def __init__(self, *, pc : str = None, mobile : str = None, web : str = None):
-        self.pc = pc
-        self.mobile = mobile
-        self.web = web
-
-    def __str__(self):
-        return self.web
-
-    def __repr__(self):
-        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
-        return f"<Link {resolved}>"
-
-    def __dict__(self):
-        self.dict = {}
-        if self.pc: self.dict["pc"] = self.pc
-        if self.mobile: self.dict["mobile"] = self.mobile
-        if self.web: self.dict["web"] = self.web
-        return self.dict
-
-class Thumbnail:
-    def __init__(self, *, image_url : str, link : Link = None, fixed_ratio : bool = False, width : int = False, height : int = False):
-        self.image_url = image_url
-        self.link = link
-        self.fixed_ratio = fixed_ratio
-        self.width = width
-        self.height = height
-
-    def __str__(self):
-        return self.image_url
-
-    def __repr__(self):
-        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
-        return f"<Thumbnail {resolved}>"
-
-    def __dict__(self):
-        self.dict = {"imageUrl":self.image_url}
-        if self.link: self.dict["link"] = self.link.__dict__()
-        if self.fixed_ratio: self.dict["fixedRatio"] = self.fixed_ratio
-        if self.fixed_ratio: self.dict["width"] = self.width
-        if self.fixed_ratio: self.dict["height"] = self.height
-        return self.dict
-        
-class Button:
-    def __init__(self, *, label : str, action : str, link : str = None, message : str = None, phone : str = None, block_id : str = None, extra : dict = None):
-        self.label = label
-        self.action = action
-        self.link = link
-        self.message = message
-        self.phone = phone
-        self.block_id = block_id
-        self.extra = extra
-
-    def __str__(self):
-        return self.label
-
-    def __repr__(self):
-        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
-        return f"<Button {resolved}>"
-
-    def __dict__(self):
-        self.dict = {"label":self.label,"action":self.action}
-        if self.action == "link": self.dict["webLinkUrl"] = self.link
-        if self.action in ["message","block"]: self.dict["messageText"] = self.message
-        if self.action == "phone": self.dict["phoneNumber"] = self.phone
-        if self.extra: self.dict["extra"] = self.extra
-        return self.dict
-
-class BasicCard:
-    def __init__(self, *, title : str = None, description : str = None, thumbnail : Thumbnail, buttons : list = None):
+class BasicCard(Forwardable):
+    def __init__(self, *, title : str = None, description : str = None, thumbnail : Thumbnail, buttons : list = None, **kwargs):
         self.title = title
         self.description = description
         self.thumbnail = thumbnail
         self.buttons = buttons
+        super().__init__(**kwargs)
 
     def __str__(self):
         return self.title
@@ -116,27 +55,11 @@ class BasicCard:
         if self.title: self.dict["basicCard"]["title"] = self.title
         if self.description: self.dict["basicCard"]["description"] = self.description
         if self.buttons: self.dict["basicCard"]["buttons"] = [button.__dict__() for button in self.buttons]
+        super().__dict__()
         return self.dict
 
-class Profile:
-    def __init__(self, *, nickname : str, image_url : str = None):
-        self.nickname = nickname
-        self.image_url = image_url
-
-    def __str__(self):
-        return self.nickname
-
-    def __repr__(self):
-        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
-        return f"<Profile {resolved}>"
-
-    def __dict__(self):
-        self.dict = {"nickname":self.nickname}
-        if self.image_url: self.dict["imageUrl"] = self.image_url
-        return self.dict
-
-class CommerceCard:
-    def __init__(self, *, description : str, price : int, discount : int = None, discount_rate : int = None, discounted_price : int = None, thumbnail : Thumbnail, profile : Profile = None, buttons : list):
+class CommerceCard(Forwardable):
+    def __init__(self, *, description : str, price : int, discount : int = None, discount_rate : int = None, discounted_price : int = None, thumbnail : Thumbnail, profile : Profile = None, buttons : list, **kwargs):
         self.description = description
         self.price = price
         self.discount = discount
@@ -145,6 +68,7 @@ class CommerceCard:
         self.thumbnail = thumbnail
         self.profile = profile
         self.buttons = buttons
+        super().__init__(**kwargs)
 
     def __str__(self):
         return self.description
@@ -159,6 +83,7 @@ class CommerceCard:
         if self.discount_rate: self.dict["commerceCard"]["discountRate"] = self.discount_rate
         if self.discounted_price: self.dict["commerceCard"]["discountedPrice"] = self.discounted_price
         if self.profile: self.dict["commerceCard"]["profile"] = self.profile.__dict__()
+        super().__dict__()
         return self.dict
 
 class ListItem:
@@ -201,11 +126,12 @@ class ListHeader:
         if self.link: self.dict["link"] = self.link.__dict__()
         return self.dict
 
-class ListCard:
-    def __init__(self, *, header : ListHeader, items : list, buttons : list = None):
+class ListCard(Forwardable):
+    def __init__(self, *, header : ListHeader, items : list, buttons : list = None, **kwargs):
         self.header = header
         self.items = items
         self.buttons = buttons
+        super().__init__(**kwargs)
 
     def __str__(self):
         return self.header.title
@@ -217,6 +143,7 @@ class ListCard:
     def __dict__(self):
         self.dict = {"listCard":{"header":self.header.__dict__(),"items":[item.__dict__() for item in self.items]}}
         if self.buttons: self.dict["listCard"]["buttons"] = [button.__dict__() for button in self.buttons]
+        super().__dict__()
         return self.dict
 
 class CarouselHeader:
