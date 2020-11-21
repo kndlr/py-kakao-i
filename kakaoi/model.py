@@ -11,7 +11,7 @@ class Link:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<Link {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {}
         if self.pc: self.dict["pc"] = self.pc
         if self.mobile: self.dict["mobile"] = self.mobile
@@ -33,9 +33,9 @@ class Thumbnail:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<Thumbnail {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"imageUrl":self.image_url}
-        if self.link: self.dict["link"] = self.link.__dict__()
+        if self.link: self.dict["link"] = self.link.to_dict()
         if self.fixed_ratio: self.dict["fixedRatio"] = self.fixed_ratio
         if self.fixed_ratio: self.dict["width"] = self.width
         if self.fixed_ratio: self.dict["height"] = self.height
@@ -58,7 +58,7 @@ class Button:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<Button {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"label":self.label,"action":self.action}
         if self.action == "link": self.dict["webLinkUrl"] = self.link
         if self.action in ["message","block"]: self.dict["messageText"] = self.message
@@ -70,7 +70,7 @@ class Forwardable:
     def __init__(self, *, forwardable : bool = None):
         self.forwardable = forwardable
 
-    def __dict__(self):
+    def to_dict(self):
         if self.forwardable: self.dict[list(self.dict.keys())[0]]["forwardable"] = self.forwardable
 
 class Profile:
@@ -85,7 +85,28 @@ class Profile:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<Profile {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"nickname":self.nickname}
         if self.image_url: self.dict["imageUrl"] = self.image_url
+        return self.dict
+
+class QuickReply:
+    def __init__(self, *, label : str, action : str, message_text : str, block_id : str = None, extra : dict = None):
+        self.label = label
+        self.action = action
+        self.message_text = message_text
+        self.block_id = block_id
+        self.extra = extra
+
+    def __str__(self):
+        return self.label
+
+    def __repr__(self):
+        resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
+        return f"<QuickReply {resolved}>"
+
+    def to_dict(self):
+        self.dict = {"label":self.label,"action":self.action,"messageText":self.message_text}
+        if self.block_id: self.dict["blockId"] = self.block_id
+        if self.extra: self.dict["extra"] = self.extra
         return self.dict

@@ -12,9 +12,9 @@ class SimpleText(Forwardable):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<SimpleText {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"simpleText":{"text": self.text}}
-        super().__dict__()
+        super().to_dict()
         return self.dict
 
 class SimpleImage(Forwardable):
@@ -30,9 +30,9 @@ class SimpleImage(Forwardable):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<SimpleImage {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"simpleImage":{"imageUrl": self.image_url,"altText": self.alt_text}}
-        super().__dict__()
+        super().to_dict()
         return self.dict
 
 class BasicCard(Forwardable):
@@ -50,12 +50,12 @@ class BasicCard(Forwardable):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<BasicCard {resolved}>"
 
-    def __dict__(self):
-        self.dict = {"basicCard":{"thumbnail":self.thumbnail.__dict__()}}
+    def to_dict(self):
+        self.dict = {"basicCard":{"thumbnail":self.thumbnail.to_dict()}}
         if self.title: self.dict["basicCard"]["title"] = self.title
         if self.description: self.dict["basicCard"]["description"] = self.description
-        if self.buttons: self.dict["basicCard"]["buttons"] = [button.__dict__() for button in self.buttons]
-        super().__dict__()
+        if self.buttons: self.dict["basicCard"]["buttons"] = [button.to_dict() for button in self.buttons]
+        super().to_dict()
         return self.dict
 
 class CommerceCard(Forwardable):
@@ -77,13 +77,13 @@ class CommerceCard(Forwardable):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<CommerceCard {resolved}>"
 
-    def __dict__(self):
-        self.dict = {"commerceCard":{"description":self.description,"price":self.price,"currency":"won","thumbnails":[self.thumbnail.__dict__()],"buttons":[button.__dict__() for button in self.buttons]}}
+    def to_dict(self):
+        self.dict = {"commerceCard":{"description":self.description,"price":self.price,"currency":"won","thumbnails":[self.thumbnail.to_dict()],"buttons":[button.to_dict() for button in self.buttons]}}
         if self.discount: self.dict["commerceCard"]["discount"] = self.discount
         if self.discount_rate: self.dict["commerceCard"]["discountRate"] = self.discount_rate
         if self.discounted_price: self.dict["commerceCard"]["discountedPrice"] = self.discounted_price
-        if self.profile: self.dict["commerceCard"]["profile"] = self.profile.__dict__()
-        super().__dict__()
+        if self.profile: self.dict["commerceCard"]["profile"] = self.profile.to_dict()
+        super().to_dict()
         return self.dict
 
 class ListItem:
@@ -100,11 +100,11 @@ class ListItem:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<ListItem {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"title":self.title}
         if self.description: self.dict["description"] = self.description
         if self.image_url: self.dict["imageUrl"] = self.image_url
-        if self.link: self.dict["link"] = self.link.__dict__()
+        if self.link: self.dict["link"] = self.link.to_dict()
         return self.dict
 
 class ListHeader:
@@ -120,10 +120,10 @@ class ListHeader:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<ListHeader {resolved}>"
 
-    def __dict__(self):
+    def to_dict(self):
         self.dict = {"title":self.title}
         if self.image_url: self.dict["imageUrl"] = self.image_url
-        if self.link: self.dict["link"] = self.link.__dict__()
+        if self.link: self.dict["link"] = self.link.to_dict()
         return self.dict
 
 class ListCard(Forwardable):
@@ -140,10 +140,10 @@ class ListCard(Forwardable):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<ListCard {resolved}>"
 
-    def __dict__(self):
-        self.dict = {"listCard":{"header":self.header.__dict__(),"items":[item.__dict__() for item in self.items]}}
-        if self.buttons: self.dict["listCard"]["buttons"] = [button.__dict__() for button in self.buttons]
-        super().__dict__()
+    def to_dict(self):
+        self.dict = {"listCard":{"header":self.header.to_dict(),"items":[item.to_dict() for item in self.items]}}
+        if self.buttons: self.dict["listCard"]["buttons"] = [button.to_dict() for button in self.buttons]
+        super().to_dict()
         return self.dict
 
 class CarouselHeader:
@@ -159,14 +159,14 @@ class CarouselHeader:
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
         return f"<CarouselHeader {resolved}>"
 
-    def __dict__(self):
-        self.dict = {"title":self.title,"description":self.description,"thumbnail":self.thumbnail.__dict__()}
+    def to_dict(self):
+        self.dict = {"title":self.title,"description":self.description,"thumbnail":self.thumbnail.to_dict()}
         return self.dict
 
 class Carousel:
-    def __init__(self, *, items : list, header : CarouselHeader = None):
-        if all([list(item.__dict__().keys())[0] for item in items]):
-            self.type = list(items[0].__dict__().keys())[0]
+    def __init__(self, items : list, *, header : CarouselHeader = None):
+        if all([list(item.to_dict().keys())[0] for item in items]):
+            self.type = list(items[0].to_dict().keys())[0]
         self.items = items
         self.header = header
 
@@ -175,9 +175,9 @@ class Carousel:
 
     def __repr__(self):
         resolved = " ".join(['%s=%r' % (attr[0], attr[1]) for attr in self.__dict__.items()])
-        return f"<CarouselHeader {resolved}>"
+        return f"<Carousel {resolved}>"
 
-    def __dict__(self):
-        self.dict = {"carousel":{"type":self.type,"items":[item.__dict__() for item in self.items]}}
-        if self.header: self.dict["carousel"]["header"] = self.header.__dict__()
+    def to_dict(self):
+        self.dict = {"carousel":{"type":self.type,"items":[item.to_dict() for item in self.items]}}
+        if self.header: self.dict["carousel"]["header"] = self.header.to_dict()
         return self.dict

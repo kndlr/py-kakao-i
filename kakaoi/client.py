@@ -13,6 +13,9 @@ class Client:
         @self.server.route("/", methods=["POST"])
         def message():
             response = func(SkillPayload(request.get_json()))
-            return {"version": "2.0","template": {"outputs": [res.__dict__() for res in response] if type(response) == list else [response.__dict__()]}}
+            if type(response) == tuple:
+                return {"version": "2.0","template": {"outputs":[res.to_dict() for res in response[0]] if type(response[0]) == list else [response[0].to_dict()],"quickReplies":[res.to_dict() for res in response[1]] if type(response[1]) == list else [response[1].to_dict()]}}
+            else:
+                return {"version": "2.0","template": {"outputs":[res.to_dict() for res in response] if type(response) == list else [response.to_dict()]}}
         
         self.server.run(host=host, port=port, debug=debug)
